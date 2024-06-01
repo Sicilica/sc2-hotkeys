@@ -114,6 +114,26 @@ const Key = ({ k, size }: { k?: KEY, size: number }) => {
             }} />
           </div>
         )}
+        {hotkey?.icon == null && hotkey?.name && (
+          <div style={{
+            alignItems: "center",
+            display: "flex",
+            flexFlow: "column",
+            height: "100%",
+            justifyContent: "center",
+            left: 0,
+            top: 0,
+            position: "absolute",
+            textAlign: "center",
+            width: "0.9em",
+          }}>
+            <span style={{
+              color: hotkey.color ?? "#f00",
+              fontFamily: "sans-serif",
+              fontSize: "0.2em",
+            }}>{hotkey.name}</span>
+          </div>
+        )}
         <span style={{
           color: "#ffa",
           fontFamily: "sans-serif",

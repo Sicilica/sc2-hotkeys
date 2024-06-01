@@ -325,4 +325,24 @@ export const Core6 = SC2.makeHotkeyProfile([
   [SC2.UNITS.viper.abilities.parasiticBomb, "p"],
   [SC2.UNITS.viper.abilities.abduct, "["],
   [SC2.UNITS.viper.abilities.consume, "'"],
+
+
+
+  /*
+   * Groups
+   */
+  [SC2.CONTROL_GROUPS[1].get, "j"],
+  [SC2.CONTROL_GROUPS[2].get, "o"],
+  [SC2.CONTROL_GROUPS[3].get, "l"],
+  [SC2.CONTROL_GROUPS[4].get, "i"],
+  [SC2.CONTROL_GROUPS[5].get, "m"],
+  [SC2.CONTROL_GROUPS[6].get, "h"],
+  [SC2.CONTROL_GROUPS[7].get, "n"],
+  [SC2.CONTROL_GROUPS[8].get, "b"],
+  [SC2.CONTROL_GROUPS[9].get, "g"],
+  [SC2.CONTROL_GROUPS[10].addSteal, ","],
+  [SC2.LOCATIONS[1].get, "0"],
+  [SC2.LOCATIONS[2].get, "9"],
+  [SC2.LOCATIONS[3].get, "8"],
+  [SC2.LOCATIONS[4].get, "u"],
 ]);

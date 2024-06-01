@@ -33,9 +33,29 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
 
   return {
     layers: {
+      default: (() => {
+        const layer = {
+          keys: {},
+        };
+        for (let i = 1; i < CONTROL_GROUPS.length; i++) {
+          addBinding(layer, CONTROL_GROUPS[i].get);
+          addBinding(layer, CONTROL_GROUPS[i].add);
+          addBinding(layer, CONTROL_GROUPS[i].addSteal);
+          addBinding(layer, CONTROL_GROUPS[i].create);
+          addBinding(layer, CONTROL_GROUPS[i].createSteal);
+        }
+        for (let i = 1; i < LOCATIONS.length; i++) {
+          addBinding(layer, LOCATIONS[i].get);
+          addBinding(layer, LOCATIONS[i].set);
+        }
+        addBinding(layer, ABILITIES.cancel);
+        return layer;
+      })(),
+
       unit: (() => {
         const layer = {
           keys: {},
+          parent: "default",
         };
         addBinding(layer, ABILITIES.attack);
         addBinding(layer, ABILITIES.holdPosition);
@@ -60,6 +80,7 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
       productionBuilding: (() => {
         const layer = {
           keys: {},
+          parent: "default",
         };
         addBinding(layer, ABILITIES.setRallyPoint);
         return layer;
@@ -83,6 +104,7 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
         } = entry[1];
         const layer: HotkeyLayer = {
           keys: {},
+          parent: "default"
         };
         if (building.parent != null) {
           layer.parent = building.parent;
@@ -92,7 +114,7 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
           addBinding(layer, unit);
           hasProduction = true;
         }
-        if (hasProduction && layer.parent == null) {
+        if (hasProduction && layer.parent === "default") {
           layer.parent = "productionBuilding";
         }
         for (const upgrade of Object.values(UPGRADES).filter(u => u.building === entry[0])) {
@@ -136,8 +158,8 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
         ].map(entry => {
           const layer: HotkeyLayer = {
             keys: {},
+            parent: "default",
           };
-          addBinding(layer, ABILITIES.cancel);
           for (const building of Object.values(BUILDINGS).filter(u => (u as { race?: Race }).race === entry[0] && (u as { build?: string }).build === entry[1])) {
             addBinding(layer, building);
           }
@@ -146,6 +168,7 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
         (() => {
           const layer: HotkeyLayer = {
             keys: {},
+            parent: "default",
           };
           addBinding(layer, ABILITIES.cancel);
           for (const unit of Object.values(UNITS).filter(u => (u as { building?: string }).building === "larva")) {
@@ -1584,3 +1607,51 @@ export const UPGRADES = {
     icon: "YamatoCannon.png",
   },
 };
+
+export const CONTROL_GROUPS: Array<Record<"get" | "add" | "addSteal" | "create" | "createSteal", Hotkey>> = [
+  null as any,
+  ...new Array(10).fill(null).map((_, i) => {
+    const CG_COLOR = "#ff0";
+    i = i + 1;
+    return {
+      get: {
+        name: `CG ${i}`,
+        color: CG_COLOR,
+      },
+      add: {
+        name: `Add CG ${i}`,
+        color: CG_COLOR,
+      },
+      addSteal: {
+        name: `Add/Steal CG ${i}`,
+        color: CG_COLOR,
+      },
+      create: {
+        name: `Create CG ${i}`,
+        color: CG_COLOR,
+      },
+      createSteal: {
+        name: `Create/Steal CG ${i}`,
+        color: CG_COLOR,
+      },
+    };
+  }),
+];
+
+export const LOCATIONS: Array<Record<"get" | "set", Hotkey>> = [
+  null as any,
+  ...new Array(8).fill(null).map((_, i) => {
+    const LOC_COLOR = "#0f0";
+    i = i + 1;
+    return {
+      get: {
+        name: `Cam ${i}`,
+        color: LOC_COLOR,
+      },
+      set: {
+        name: `Set Cam ${i}`,
+        color: LOC_COLOR,
+      },
+    };
+  }),
+];

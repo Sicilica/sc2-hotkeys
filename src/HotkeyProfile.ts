@@ -8,5 +8,7 @@ export interface HotkeyLayer {
 }
 
 export interface Hotkey {
+  color?: string;
   icon?: string;
+  name?: string;
 }

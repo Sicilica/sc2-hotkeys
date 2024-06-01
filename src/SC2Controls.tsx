@@ -20,14 +20,6 @@ export const SC2Controls = ({ setLayer }: { setLayer: (layer: string) => void })
     })).filter(u => u.icon != null && u.icon !== "").sort(raceAlphaSort);
   }, [SC2.UNITS]);
 
-  const upgrades = useMemo(() => {
-    return Object.entries(SC2.UPGRADES).map(u => ({
-      name: u[0],
-      icon: u[1].icon,
-      race: u[1].race as SC2.Race,
-    })).filter(u => u.icon != null && u.icon !== "").sort(raceAlphaSort);
-  }, [SC2.UNITS]);
-
   return (
     <div style={{
       marginBottom: "15px",
@@ -52,16 +44,6 @@ export const SC2Controls = ({ setLayer }: { setLayer: (layer: string) => void })
             width: "48px",
           }} />
         </button>
-      ))}
-      <br />
-      {upgrades.map(u => (
-        <span key={u.name} style={{
-          margin: "4px",
-        }}>
-          <img src={`icons/${u.icon}`} style={{
-            width: "48px",
-          }} />
-        </span>
       ))}
       <br />
       <button onClick={() => setLayer(`basic/${SC2.TERRAN}`)}>Terran Basic</button>

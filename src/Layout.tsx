@@ -14,18 +14,14 @@ const KEYBOARDS = {
 };
 
 const PROFILES = {
-  "The Core 6": Core6,
+  "The Core 6 (semi-updated)": Core6,
 };
 
 export const Layout = () => {
   const [keyboard, setKeyboard] = useState<keyof typeof KEYBOARDS>("RK80");
   const [dvorak, setDvorak] = useState(false);
-  const [profile, setProfile] = useState<keyof typeof PROFILES>("The Core 6");
-  const [layer, setLayer] = useState("");
-
-  useEffect(() => {
-    console.log(PROFILES[profile]);
-  }, [profile]);
+  const [profile, setProfile] = useState<keyof typeof PROFILES>("The Core 6 (semi-updated)");
+  const [layer, setLayer] = useState("default");
 
   return (
     <div style={{
