@@ -49,7 +49,10 @@ export const Layout = () => {
       </div>
       <SC2Controls setLayer={setLayer} />
       <DvorakToggleContext.Provider value={dvorak}>
-        <HotkeysContext.Provider value={PROFILES[profile].layers[layer] ?? { keys: {} }}>
+        <HotkeysContext.Provider value={{
+          profile: PROFILES[profile],
+          layer,
+        }}>
           {KEYBOARDS[keyboard]}
         </HotkeysContext.Provider>
       </DvorakToggleContext.Provider>

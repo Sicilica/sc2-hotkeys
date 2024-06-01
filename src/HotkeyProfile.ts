@@ -4,6 +4,7 @@ export interface HotkeyProfile {
 
 export interface HotkeyLayer {
   keys: Record<string, Hotkey>;
+  parent?: string;
 }
 
 export interface Hotkey {
