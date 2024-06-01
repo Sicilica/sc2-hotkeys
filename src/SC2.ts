@@ -7,19 +7,15 @@ export const ZERG = 3;
 export type Race = typeof TERRAN | typeof PROTOSS | typeof ZERG;
 
 const UNUSED = [
-  "Envision.png",
+  "Envision.png",// this maybe signifies a detector
   "hive.jpg",
   "interceptor.jpg",
-  "lair.jpg",
   "Protoss.png",
   "ProtossAirWeapons.png",
-  "Root.png",
   "Selectbuilder.png",
   "Terran.png",
-  "Uproot.png",
   "warpgate.jpg",
   "Zerg.png",
-  "larva.jpg",
 ]
 
 export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>): HotkeyProfile => {
@@ -62,9 +58,18 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
         return layer;
       })(),
 
+      productionBuilding: (() => {
+        const layer = {
+          keys: {},
+        };
+        addBinding(layer, ABILITIES.setRallyPoint);
+        return layer;
+      })(),
+
       commandCenterBase: (() => {
         const layer = {
           keys: {},
+          parent: "productionBuilding",
         };
         addBinding(layer, UNITS.scv);
         return layer;
@@ -83,8 +88,13 @@ export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>
         if (building.parent != null) {
           layer.parent = building.parent;
         }
+        let hasProduction = false;
         for (const unit of Object.values(UNITS).filter(u => (u as { building?: string }).building === entry[0])) {
           addBinding(layer, unit);
+          hasProduction = true;
+        }
+        if (hasProduction && layer.parent == null) {
+          layer.parent = "productionBuilding";
         }
         for (const upgrade of Object.values(UPGRADES).filter(u => u.building === entry[0])) {
           addBinding(layer, upgrade);
@@ -385,15 +395,18 @@ export const BUILDINGS = {
     build: "advanced",
     icon: "ghostacademy.jpg",
   },
-  greaterSpire: {
-    race: ZERG,
-    parent: "b/spire",
-    icon: "greaterspire.jpg",
-  },
   hatchery: {
     race: ZERG,
     build: "basic",
     icon: "hatchery.jpg",
+    abilities: {
+      morphLairHive: {
+        icon: "lair.jpg",
+      },
+      selectLarva: {
+        icon: "larva.jpg",
+      },
+    }
   },
   hydraliskDen: {
     race: ZERG,
@@ -404,6 +417,11 @@ export const BUILDINGS = {
     race: ZERG,
     build: "advanced",
     icon: "infestationpit.jpg",
+  },
+  lurkerDen: {
+    race: ZERG,
+    build: "advanced",
+    icon: "lurkerden.png",
   },
   missileTurret: {
     race: TERRAN,
@@ -425,6 +443,7 @@ export const BUILDINGS = {
     build: "advanced",
     icon: "nydusnetwork.jpg",
     abilities: {
+      ...unload,
       nydusWorm: {
         icon: "NydusWorm.jpeg",
       },
@@ -503,15 +522,29 @@ export const BUILDINGS = {
     race: ZERG,
     build: "basic",
     icon: "spinecrawler.jpg",
+    abilities: {
+      root: {
+        icon: "Root.png",
+      },
+      uproot: {
+        icon: "Uproot.png",
+      },
+    },
   },
   spire: {
     race: ZERG,
     build: "advanced",
     icon: "spire.jpg",
+    abilities: {
+      morphGreaterSpire: {
+        icon: "greaterspire.jpg",
+      },
+    },
   },
   sporeCrawler: {
     race: ZERG,
     build: "basic",
+    parent: "b/spineCrawler",
     icon: "sporecrawler.jpg",
   },
   stargate: {
@@ -571,11 +604,15 @@ export const UNITS = {
     race: ZERG,
     icon: "baneling.jpg",
     abilities: {
-      enableBuildingAttack: {
+      ...burrow,
+      enableStructureAttack: {
         icon: "EnableBuildingAttack.png",
       },
       explode: {
         // TODO also png
+        icon: "Explode.gif",
+      },
+      disableStructureAttack: {
         icon: "Explode.gif",
       },
     },
@@ -627,6 +664,9 @@ export const UNITS = {
     abilities: {
       causticSpray: {
         icon: "CorruptionAbility.png",
+      },
+      morphBroodLord: {
+        icon: "broodlord.jpg",
       },
     },
   },
@@ -721,6 +761,12 @@ export const UNITS = {
     race: ZERG,
     building: "larva",
     icon: "hydralisk.jpg",
+    abilities: {
+      ...burrow,
+      morphLurker: {
+        icon: "lurker.png"
+      },
+    },
   },
   immortal: {
     race: PROTOSS,
@@ -732,8 +778,12 @@ export const UNITS = {
     building: "larva",
     icon: "infestor.jpg",
     abilities: {
+      ...burrow,
       fungalGrowth: {
         icon: "FungalGrowth.png",
+      },
+      microbialShroud: {
+        icon: "Microbial_Shroud.png",
       },
       neuralParasite: {
         icon: "NeuralParasite.png",
@@ -750,6 +800,34 @@ export const UNITS = {
       },
       fighter: {
         icon: "Fighter_mode_liberator.png",
+      },
+    },
+  },
+  locust: {
+    race: ZERG,
+    icon: "SpawnLocusts.png",
+    abilities: {
+      swoop: {
+        icon: "swoop.png",
+      },
+    },
+  },
+  lurker: {
+    race: ZERG,
+    icon: "lurker.png",
+    abilities: {
+      burrow: {
+        icon: "Burrow.gif",
+      },
+      unburrow: {
+        icon: "Unburrow.gif",
+      },
+      holdFire: {
+        icon: "btn-ability-terran-holdfire.jpg",
+      },
+      release: {
+        // TODO also "btn-ability-terran-weaponsfree.jpg",
+        icon: "WeaponsFree.png",
       },
     },
   },
@@ -825,6 +903,11 @@ export const UNITS = {
     building: "larva",
     icon: "overlord.jpg",
     abilities: {
+      ...unload,
+      load: {
+        // TODO also png
+        icon: "Load.gif",
+      },
       generateCreep: {
         icon: "GenerateCreep.png",
       },
@@ -850,6 +933,12 @@ export const UNITS = {
       contaminate: {
         icon: "Contaminate.png",
       },
+      oversight: {
+        icon: "Oversight.png",
+      },
+      cancelOversight: {
+        icon: "Cancel_Oversight.png",
+      },
     },
   },
   phoenix: {
@@ -873,12 +962,26 @@ export const UNITS = {
     building: "hatchery",
     icon: "queen.jpg",
     abilities: {
+      ...burrow,
       creepTumor: {
         // TODO SpawnCreepTumor.gif
         icon: "BuildCreepTumor.png",
       },
+      injectLarva: {
+        icon: "Spawn_larva.gif",
+      },
       transfusion: {
         icon: "Transfusion.png",
+      },
+    },
+  },
+  ravager: {
+    race: ZERG,
+    icon: "ravager.png",
+    abilities: {
+      ...burrow,
+      corrosiveBile: {
+        icon: "corrosivebile.jpg",
       },
     },
   },
@@ -913,6 +1016,12 @@ export const UNITS = {
     race: ZERG,
     building: "larva",
     icon: "roach.jpg",
+    abilities: {
+      ...burrow,
+      morphRavager: {
+        icon: "ravager.png",
+      },
+    },
   },
   scv: {
     race: TERRAN,
@@ -969,6 +1078,7 @@ export const UNITS = {
     building: "larva",
     icon: "swarmhost.jpg",
     abilities: {
+      ...burrow,
       spawnLocusts: {
         icon: "SpawnLocusts.png",
       },
@@ -1028,6 +1138,9 @@ export const UNITS = {
       consume: {
         icon: "ViperConsume.png",
       },
+      parasiticBomb: {
+        icon: "Parasitic_Bomb.jpg",
+      },
     },
   },
   voidRay: {
@@ -1078,10 +1191,19 @@ export const UNITS = {
     race: ZERG,
     building: "larva",
     icon: "zergling.jpg",
+    abilities: {
+      ...burrow,
+    },
   },
 };
 
 export const UPGRADES = {
+  adaptiveTalons: {
+    race: ZERG,
+    building: "lurkerDen",
+    icon: "Adaptive_Talons.png",
+    desc: "Lurker burrow speed",
+  },
   adrenalGlands: {
     race: ZERG,
     building: "spawningPool",
@@ -1094,6 +1216,12 @@ export const UPGRADES = {
     icon: "Advanced_Ballistics.jpg",
     desc: "Liberator range",
   },
+  anabolicSynthesis: {
+    race: ZERG,
+    building: "ultraliskCavern",
+    icon: "Anabolic_Synthesis.gif",
+    desc: "Ultralisk speed",
+  },
   anionPulseCrystals: {
     race: PROTOSS,
     building: "fleetBeacon",
@@ -1104,6 +1232,11 @@ export const UPGRADES = {
     race: TERRAN,
     building: "ghostAcademy",
     icon: "NukeCalldown.png",
+  },
+  burrow: {
+    race: ZERG,
+    building: "hatchery",
+    icon: "Burrow.gif",
   },
   caduceusReactor: {
     race: TERRAN,
@@ -1249,7 +1382,7 @@ export const UPGRADES = {
   },
   missileAttacks: {
     race: ZERG,
-    building: "evolutionChamebr",
+    building: "evolutionChamber",
     icon: "ZergMissileAttacks1.gif",
   },
   muscularAugments: {
@@ -1263,6 +1396,11 @@ export const UPGRADES = {
     building: "engineeringBay",
     icon: "BuildingArmor.gif",
     desc: "Building armor and cargo space",
+  },
+  neuralParasite: {
+    race: ZERG,
+    building: "infestationPit",
+    icon: "NeuralParasite.png",
   },
   personalCloaking: {
     race: TERRAN,
@@ -1299,6 +1437,12 @@ export const UPGRADES = {
     race: PROTOSS,
     building: "forge",
     icon: "ProtossShieldsLevel1.gif",
+  },
+  seismicSpines: {
+    race: ZERG,
+    building: "lurkerDen",
+    icon: "Seismic_Spines.png",
+    desc: "Lurker range",
   },
   shipWeapons: {
     race: TERRAN,
