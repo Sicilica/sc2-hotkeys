@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { KEY, KEYMAP } from "./keymap";
 import { useKeyState } from "./useKeyState";
 import { useDvorakToggle } from "./useDvorakToggle";
+import { useHotkey } from "./useHotkey";
 
 type KeyboardRowLayout = Array<string | number | [string, number]>;
 
@@ -76,12 +77,13 @@ const Key = ({ k, size }: { k?: KEY, size: number }) => {
   const PADDING = 0.04;
 
   const key = k ? KEYMAP[k] : null;
+  const hotkey = useHotkey(k);
 
   const pressed = useKeyState(key?.code);
 
   const dv = useDvorakToggle();
   const label = (dv && key?.dv != null && KEYMAP[key.dv] != null) ? KEYMAP[key.dv].label : key?.label;
-  const usable = key != null && key.usable !== false;
+  const bound = hotkey != null;
 
   return (
     <div style={{
@@ -90,13 +92,31 @@ const Key = ({ k, size }: { k?: KEY, size: number }) => {
       width: `${size - 2 * PADDING}em`,
     }}>
       <div style={{
-        background: pressed ? "#84c" : (usable ? "#118" : "#080822"),
+        background: pressed ? (bound ? "#84c" : "#824") : (bound ? "#118" : "#080822"),
         height: "100%",
         position: "relative",
         width: "100%",
       }}>
+        {hotkey?.icon && (
+          <div style={{
+            alignItems: "center",
+            display: "flex",
+            height: "100%",
+            justifyContent: "center",
+            left: 0,
+            position: "absolute",
+            top: 0,
+            width: "100%",
+          }}>
+            <img src={`icons/${hotkey.icon}`} style={{
+              height: "0.8em",
+              width: "0.8em",
+            }} />
+          </div>
+        )}
         <span style={{
           color: "#ffa",
+          fontFamily: "sans-serif",
           fontSize: "0.25em",
           left: "0.1em",
           position: "absolute",

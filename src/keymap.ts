@@ -4,7 +4,6 @@ export const KEYMAP: Record<KEY, {
   code: string;
   label: string;
   dv?: string;
-  usable?: false;
 }> = {
   ",": {
     code: "Comma",
@@ -141,13 +140,11 @@ export const KEYMAP: Record<KEY, {
   },
   "superL": {
     code: "MetaLeft",
-    label: "",
-    usable: false,
+    label: "⌘",
   },
   "superR": {
     code: "MetaRight",
-    label: "",
-    usable: false,
+    label: "⌘",
   },
 };
 
