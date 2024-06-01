@@ -7,15 +7,14 @@ export const ZERG = 3;
 export type Race = typeof TERRAN | typeof PROTOSS | typeof ZERG;
 
 const UNUSED = [
-  "Envision.png",// this maybe signifies a detector
   "hive.jpg",
   "interceptor.jpg",
   "Protoss.png",
-  "ProtossAirWeapons.png",
   "Selectbuilder.png",
   "Terran.png",
   "warpgate.jpg",
   "Zerg.png",
+  "Envision.png", // maybe signifies a detector
 ]
 
 export const makeHotkeyProfile = (bindings: Array<[Hotkey, keyof typeof KEYMAP]>): HotkeyProfile => {
@@ -221,6 +220,13 @@ const cloak = {
   },
 };
 
+const mergeArchon = {
+  mergeArchon: {
+    // TODO also png
+    icon: "AWrp.gif",
+  },
+};
+
 export const ABILITIES = {
   ...buildAddons,
   ...liftoff,
@@ -229,6 +235,7 @@ export const ABILITIES = {
   ...load,
   ...burrow,
   ...cloak,
+  ...mergeArchon,
   attack: {
     icon: "Attack.png",
   },
@@ -433,8 +440,14 @@ export const BUILDINGS = {
     build: "basic",
     icon: "nexus.jpg",
     abilities: {
+      batteryOvercharge: {
+        icon: "Battery_Overcharge.png",
+      },
       chronoBoost: {
         icon: "ChronoBoost.png",
+      },
+      strategicRecall: {
+        icon: "MassRecall.png",
       },
     },
   },
@@ -512,6 +525,11 @@ export const BUILDINGS = {
     race: TERRAN,
     build: "basic",
     icon: "sensortower.jpg",
+  },
+  shieldBattery: {
+    race: PROTOSS,
+    build: "basic",
+    icon: "Shield_Battery.jpg",
   },
   spawningPool: {
     race: ZERG,
@@ -596,6 +614,16 @@ export const BUILDINGS = {
 };
 
 export const UNITS = {
+  adept: {
+    race: PROTOSS,
+    building: "gateway",
+    icon: "adept.png",
+    abilities: {
+      psionicTransfer: {
+        icon: "Psionic_Transfer.png",
+      },
+    },
+  },
   archon: {
     race: PROTOSS,
     icon: "archon.jpg",
@@ -684,6 +712,22 @@ export const UNITS = {
     race: PROTOSS,
     building: "gateway",
     icon: "darktemplar.jpg",
+    abilities: {
+      ...mergeArchon,
+      shadowStride: {
+        icon: "Shadow_Stride.png",
+      },
+    },
+  },
+  disruptor: {
+    race: PROTOSS,
+    building: "roboticsFacility",
+    icon: "disruptor.png",
+    abilities: {
+      purificationNova: {
+        icon: "Purification_Nova.png",
+      },
+    },
   },
   drone: {
     race: ZERG,
@@ -742,18 +786,12 @@ export const UNITS = {
     building: "gateway",
     icon: "hightemplar.jpg",
     abilities: {
+      ...mergeArchon,
       feedback: {
         icon: "Feedback.png",
       },
-      hallucination: {
-        icon: "Hallucination.png",
-      },
       psiStorm: {
         icon: "PsiStorm.png",
-      },
-      warpArchon: {
-        // TODO also png
-        icon: "AWrp.gif",
       },
     },
   },
@@ -772,6 +810,11 @@ export const UNITS = {
     race: PROTOSS,
     building: "roboticsFacility",
     icon: "immortal.jpg",
+    abilities: {
+      barrier: {
+        icon: "Barrier.png",
+      },
+    },
   },
   infestor: {
     race: ZERG,
@@ -867,9 +910,15 @@ export const UNITS = {
     building: "nexus",
     icon: "mothership.jpg",
     abilities: {
-      massRecall: {
-        icon: "MassRecall.png",
+      cloakingField: {
+        icon: "Cloaking_field.png",
       },
+      massRecall: {
+        icon: "Mass_Recall.png",
+      },
+      timeWarp: {
+        icon: "Time_warp.jpg",
+      }
     },
   },
   mutalisk: {
@@ -881,6 +930,14 @@ export const UNITS = {
     race: PROTOSS,
     building: "roboticsFacility",
     icon: "observer.jpg",
+    abilities: {
+      observerMode: {
+        icon: "Observer_Mode.png",
+      },
+      surveillanceMode: {
+        icon: "Surveillance_Mode.png",
+      },
+    },
   },
   oracle: {
     race: PROTOSS,
@@ -895,6 +952,9 @@ export const UNITS = {
       },
       revelation: {
         icon: "OracleRevelation.png",
+      },
+      stasisWard: {
+        icon: "Stasis_Ward.png",
       },
     },
   },
@@ -1047,6 +1107,9 @@ export const UNITS = {
       guardianShield: {
         icon: "GuardianShield.gif",
       },
+      hallucination: {
+        icon: "Hallucination.png",
+      },
     },
   },
   siegeTank: {
@@ -1159,6 +1222,8 @@ export const UNITS = {
     building: "roboticsFacility",
     icon: "warpprism.jpg",
     abilities: {
+      ...unload,
+      ...load,
       phasingMode: {
         // TODO also png
         icon: "Phasing_mode.gif",
@@ -1186,6 +1251,11 @@ export const UNITS = {
     race: PROTOSS,
     building: "gateway",
     icon: "zealot.jpg",
+    abilities: {
+      charge: {
+        icon: "Charge.png",
+      },
+    }
   },
   zergling: {
     race: ZERG,
@@ -1232,6 +1302,11 @@ export const UPGRADES = {
     race: TERRAN,
     building: "ghostAcademy",
     icon: "NukeCalldown.png",
+  },
+  blink: {
+    race: PROTOSS,
+    building: "twilightCouncil",
+    icon: "Blink.png",
   },
   burrow: {
     race: ZERG,
@@ -1290,6 +1365,12 @@ export const UPGRADES = {
     building: "roboticsBay",
     icon: "ColossusRange.gif",
     desc: "Colossus range",
+  },
+  fluxVanes: {
+    race: PROTOSS,
+    building: "fleetBeacon",
+    icon: "Flux_Vanes.png",
+    desc: "Void Ray movement",
   },
   flyerAttack: {
     race: ZERG,
@@ -1438,6 +1519,16 @@ export const UPGRADES = {
     building: "forge",
     icon: "ProtossShieldsLevel1.gif",
   },
+  psionicStorm: {
+    race: PROTOSS,
+    building: "templarArchive",
+    icon: "PsiStorm.png",
+  },
+  resonatingGlaives: {
+    race: PROTOSS,
+    building: "twilightCouncil",
+    icon: "Resonating_Glaives.jpg",
+  },
   seismicSpines: {
     race: ZERG,
     building: "lurkerDen",
@@ -1459,6 +1550,12 @@ export const UPGRADES = {
     race: TERRAN,
     building: "barracks/techLab",
     icon: "Stim.png",
+  },
+  tectonicDestabilizers: {
+    race: PROTOSS,
+    building: "fleetBeacon",
+    icon: "Tectonic_Destabilizers.png",
+    desc: "Tempest damage vs structures",
   },
   tunnelingClaws: {
     race: ZERG,
