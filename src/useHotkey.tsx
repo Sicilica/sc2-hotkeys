@@ -14,7 +14,7 @@ export const useHotkey = (key?: string) => {
   return resolveHotkey(profile, layer, key);
 };
 
-const resolveHotkey = (profile: HotkeyProfile, layer: string, key: string): Hotkey | null => {
+export const resolveHotkey = (profile: HotkeyProfile, layer: string, key: string): Hotkey | null => {
   const l = profile.layers[layer];
   if (l == null) {
     return null;

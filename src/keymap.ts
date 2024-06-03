@@ -1,5 +1,9 @@
 export type KEY = string;
 
+export const codeToKey = (code: string) => {
+  return INV_KEYMAP[code];
+};
+
 export const KEYMAP: Record<KEY, {
   code: string;
   label: string;
@@ -196,3 +200,10 @@ KEYMAP.w.dv = ",";
 KEYMAP.x.dv = "q";
 KEYMAP.y.dv = "f";
 KEYMAP.z.dv = ";";
+
+const INV_KEYMAP: Record<string, KEY> = {};
+if (Object.keys(INV_KEYMAP == null).length === 0) {
+  for (const k in KEYMAP) {
+    INV_KEYMAP[KEYMAP[k].code] = k;
+  }
+}

@@ -1,11 +1,14 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { Keyboard_RK80 } from "./keyboards/RK80"
 import { Keyboard_Standard75 } from "./keyboards/Standard75";
 import { Keyboard_Standard80 } from "./keyboards/Standard80";
 import { DvorakToggleContext } from "./useDvorakToggle";
 import { Core6 } from "./profiles/Core6";
-import { HotkeysContext } from "./useHotkey";
+import { HotkeysContext, resolveHotkey } from "./useHotkey";
 import { SC2Controls } from "./SC2Controls";
+import { KeyStateProvider } from "./KeyStateProvider";
+import { codeToKey } from "./keymap";
+import { HotkeyFeedback } from "./HotkeyFeedback";
 
 const KEYBOARDS = {
   "RK80": <Keyboard_RK80 />,
@@ -17,11 +20,28 @@ const PROFILES = {
   "The Core 6 (semi-updated)": Core6,
 };
 
-export const Layout = () => {
+export const Layout = ({}: {}) => {
   const [keyboard, setKeyboard] = useState<keyof typeof KEYBOARDS>("RK80");
   const [dvorak, setDvorak] = useState(false);
   const [profile, setProfile] = useState<keyof typeof PROFILES>("The Core 6 (semi-updated)");
   const [layer, setLayer] = useState("default");
+  const onHitTarget = useMemo(() => new EventTarget(), []);
+
+  const onHit = useCallback((code: string) => {
+    const key = codeToKey(code);
+    if (key == null) {
+      return;
+    }
+    const hk = resolveHotkey(PROFILES[profile], layer, key);
+    if (hk == null) {
+      return;
+    }
+    onHitTarget.dispatchEvent(new CustomEvent("hotkey", {
+      detail: {
+        hotkey: hk,
+      },
+    }));
+  }, [profile, layer]);
 
   return (
     <div style={{
@@ -43,13 +63,16 @@ export const Layout = () => {
         <div style={{ display: "inline-block", width: "2em" }} />
         <ProfileSelector value={profile} onChange={setProfile} />
       </div>
-      <SC2Controls setLayer={setLayer} />
+      <SC2Controls setLayer={setLayer} onHit={onHitTarget} />
+      <HotkeyFeedback hotkeyEvent={onHitTarget} />
       <DvorakToggleContext.Provider value={dvorak}>
         <HotkeysContext.Provider value={{
           profile: PROFILES[profile],
           layer,
         }}>
-          {KEYBOARDS[keyboard]}
+          <KeyStateProvider onHit={onHit}>
+            {KEYBOARDS[keyboard]}
+          </KeyStateProvider>
         </HotkeysContext.Provider>
       </DvorakToggleContext.Provider>
     </div>

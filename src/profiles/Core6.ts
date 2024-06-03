@@ -158,7 +158,7 @@ export const Core6 = SC2.makeHotkeyProfile([
   [SC2.BUILDINGS.nexus, "-"],
   [SC2.BUILDINGS.stargate, ";"],
   [SC2.BUILDINGS.roboticsFacility, "k"],
-  [SC2.BUILDINGS.templarArchive, "p"],
+  [SC2.BUILDINGS.templarArchives, "p"],
   [SC2.BUILDINGS.darkShrine, "["],
   [SC2.BUILDINGS.twilightCouncil, "'"],
   [SC2.BUILDINGS.fleetBeacon, "."],

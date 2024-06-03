@@ -33,6 +33,7 @@ export const Keyboard = ({ firstRowGap, layout, width }: {
     <>
       <div ref={ref} style={{
         alignItems: "center",
+        justifyContent: "end",
         fontSize: `${em}px`,
         display: "flex",
         flexFlow: "column nowrap",

@@ -2,7 +2,7 @@ import { PropsWithChildren, createContext, useCallback, useEffect, useState } fr
 
 export const KeyStateContext = createContext<Record<string, boolean | undefined>>({});
 
-export const KeyStateProvider = ({ children }: PropsWithChildren) => {
+export const KeyStateProvider = ({ children, onHit }: PropsWithChildren<{ onHit?: (code: string) => void; }>) => {
   const [value, setValue] = useState<Record<string, boolean | undefined>>({});
 
   const onBlur = useCallback(() => {
@@ -14,11 +14,16 @@ export const KeyStateProvider = ({ children }: PropsWithChildren) => {
 
   const onKeyDown = useCallback((ev: KeyboardEvent) => {
     ev.preventDefault();
+    if (ev.repeat) {
+      // This isn't working for me atm (probably some xwayland nonsense?)
+      return;
+    }
     setValue(v => ({
       ...v,
       [ev.code]: true,
     }));
-  }, [setValue]);
+    onHit && onHit(ev.code);
+  }, [setValue, onHit]);
 
   const onKeyUp = useCallback((ev: KeyboardEvent) => {
     ev.preventDefault();
